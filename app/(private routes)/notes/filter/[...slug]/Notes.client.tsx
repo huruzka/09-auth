@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import { useDebounce } from 'use-debounce';
 import Link from 'next/link';
 
-import { fetchNotes } from '@/lib/api';
+import { fetchNotes } from '@/lib/api/clientApi';
 import Loader from '@/components/Loader/Loader';
 import NoteList from '@/components/NoteList/NoteList';
 import Pagination from '@/components/Pagination/Pagination';
