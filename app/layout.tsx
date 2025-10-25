@@ -10,6 +10,9 @@ import AuthProvider from "@/components/AuthProvider/AuthProvider";
 export const metadata: Metadata = {
   title: "Note Hub App",
   description: "Notes for your life",
+  icons: {
+    icon: "./icon/favicon-32x32.png",
+  },
   openGraph: {
       title: `Note Hub App`,
       description: 'Notes for your life',
