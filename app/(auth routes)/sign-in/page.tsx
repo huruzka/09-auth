@@ -25,10 +25,7 @@ export default function SignInPage() {
             const user = await signIn({ email, password });
             setUser(user); // 3. Використовуємо setUser для оновлення стану
             toast.success("Login successful!");
-            setTimeout(() => {
-    router.push("/profile");
-}, 50);
-              
+            router.push("/profile");              
         } catch (error) {
             let errorMessage = "Login failed. Please check your credentials.";
             if (isAxiosError(error) && error.response) {
