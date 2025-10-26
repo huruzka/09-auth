@@ -1,26 +1,35 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { api } from '../../api';
 import { cookies } from 'next/headers';
+import { parse } from 'cookie';
 import { isAxiosError } from 'axios';
 import { logErrorResponse } from '../../_utils/utils';
 
-export async function POST() {
+export async function POST(req: NextRequest) {
   try {
+    const body = await req.json();
+    const apiRes = await api.post('auth/login', body);
+
     const cookieStore = await cookies();
+    const setCookie = apiRes.headers['set-cookie'];
 
-    const accessToken = cookieStore.get('accessToken')?.value;
-    const refreshToken = cookieStore.get('refreshToken')?.value;
+    if (setCookie) {
+      const cookieArray = Array.isArray(setCookie) ? setCookie : [setCookie];
+      for (const cookieStr of cookieArray) {
+        const parsed = parse(cookieStr);
+        const options = {
+          expires: parsed.Expires ? new Date(parsed.Expires) : undefined,
+          path: parsed.Path,
+          maxAge: Number(parsed['Max-Age']),
+        };
+        if (parsed.accessToken) cookieStore.set('accessToken', parsed.accessToken, options);
+        if (parsed.refreshToken) cookieStore.set('refreshToken', parsed.refreshToken, options);
+      }
 
-    await api.post('auth/logout', null, {
-      headers: {
-        Cookie: `accessToken=${accessToken}; refreshToken=${refreshToken}`,
-      },
-    });
+      return NextResponse.json(apiRes.data, { status: apiRes.status });
+    }
 
-    cookieStore.delete('accessToken');
-    cookieStore.delete('refreshToken');
-
-    return NextResponse.json({ message: 'Logged out successfully' }, { status: 200 });
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   } catch (error) {
     if (isAxiosError(error)) {
       logErrorResponse(error.response?.data);

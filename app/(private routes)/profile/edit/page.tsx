@@ -72,7 +72,7 @@ export default function EditProfilePage() {
 
     return (
         <main className={css.mainContent}>
-            <Toaster position="top-right" />
+            <Toaster />
             <div className={css.profileCard}>
                 <h1 className={css.formTitle}>Edit Profile</h1>
                 <Image

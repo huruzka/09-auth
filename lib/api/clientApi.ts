@@ -65,11 +65,12 @@ export const createNote = async (noteData: NewNotePayload): Promise<Note> => {
 
 // Оновлення нотатки
 export const deleteNote = async (noteId: string): Promise<Note> => {
-    if (!noteId) {
-        throw new Error("Note ID is required for deletion");
-    }
-    const response = await apiClient.delete<Note>(`/notes/${noteId}`);
-    return response.data;
+  if (!noteId?.trim()) {
+    throw new Error("❌ Invalid note ID: ID must be a non-empty string.");
+  }
+
+  const { data } = await apiClient.delete<Note>(`/notes/${noteId}`);
+  return data;
 };
 
 // Отримання нотатки за ID
