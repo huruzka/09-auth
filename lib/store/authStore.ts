@@ -2,7 +2,6 @@
 
 import { create } from "zustand";
 import { User } from "@/types/user";
-import apiClient from "@/lib/api/api";
 
 type AuthState = {
     user: User | null;
@@ -22,11 +21,3 @@ export const useAuthStore = create<AuthState>()((set) => ({
     },
 }));
 
-export const logout = async (): Promise<void> => {
-  try {
-    await apiClient.post("/auth/logout"); // правильний endpoint
-  } catch (error) {
-    console.error("Logout failed:", error);
-    // навіть якщо бекенд не відповів — все одно очищуємо стан
-  }
-};
